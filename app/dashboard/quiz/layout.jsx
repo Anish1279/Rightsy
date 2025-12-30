@@ -1,11 +1,11 @@
 import { Inter } from "next/font/google"
 import { Suspense } from "react"
-
+//  this is providing the basic layout for the aboves quiz section ....
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "Indian Laws & Rights Quiz for Kids",
-  description: "Learn about Indian laws and rights through fun interactive quizzes for children",
+  description: "Learn about Indian laws and rights through fun interactive quizzes for children Of age group of 6-14 years",
 }
 
 export default function RootLayout({ children }) {
