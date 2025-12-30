@@ -1,5 +1,5 @@
 "use client"
-
+// Here we are going to handles the different quiz levels
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import QuizContainer from "../../(component)/Quiz-container"
