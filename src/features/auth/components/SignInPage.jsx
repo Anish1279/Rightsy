@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Eye, EyeOff, Shield, Sparkles, Gamepad2 } from "lucide-react";
+import { loginSchema } from "@/features/auth/schemas/auth-schemas";
 import { loginRequest } from "@/features/auth/services/auth-api-client";
 
 /**
@@ -12,29 +15,29 @@ import { loginRequest } from "@/features/auth/services/auth-api-client";
  */
 export default function SignInPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      setLoading(true);
-
-      try {
-        await loginRequest({ email, password });
-        toast.success("Welcome back! 🎉");
-        router.push("/dashboard");
-        router.refresh();
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setLoading(false);
-      }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
     },
-    [email, password, router]
-  );
+  });
+
+  async function onSubmit(values) {
+    try {
+      await loginRequest(values);
+      toast.success("Welcome back!");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#0a0618] overflow-hidden">
@@ -121,7 +124,7 @@ export default function SignInPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
             {/* Email */}
             <div className="space-y-2">
               <label
@@ -133,12 +136,13 @@ export default function SignInPage() {
               <input
                 id="signin-email"
                 type="email"
-                required
                 placeholder="your.email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                aria-invalid={errors.email ? "true" : "false"}
+                {...register("email")}
                 className="w-full rounded-2xl border border-white/[0.1] bg-white/[0.04] px-5 py-3.5 text-sm text-white placeholder:text-white/30 focus:bg-white/[0.06] focus:border-violet-500/80 focus:ring-4 focus:ring-violet-500/20 transition-all outline-none backdrop-blur-md"
               />
+              {errors.email && <p className="text-xs font-semibold text-red-300">{errors.email.message}</p>}
             </div>
 
             {/* Password */}
@@ -153,10 +157,10 @@ export default function SignInPage() {
                 <input
                   id="signin-password"
                   type={showPassword ? "text" : "password"}
-                  required
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  aria-invalid={errors.password ? "true" : "false"}
+                  {...register("password")}
                   className="w-full rounded-2xl border border-white/[0.1] bg-white/[0.04] px-5 py-3.5 pr-12 text-sm text-white placeholder:text-white/30 focus:bg-white/[0.06] focus:border-violet-500/80 focus:ring-4 focus:ring-violet-500/20 transition-all outline-none backdrop-blur-md"
                 />
                 <button
@@ -168,15 +172,21 @@ export default function SignInPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {errors.password && <p className="text-xs font-semibold text-red-300">{errors.password.message}</p>}
+              <div className="text-right">
+                <Link href="/forgot-password" className="text-xs font-bold text-violet-300 hover:text-violet-200">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             {/* Submit */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="w-full mt-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold py-4 rounded-2xl shadow-[0_4px_20px_rgba(124,58,237,0.3)] hover:shadow-[0_8px_30px_rgba(124,58,237,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[15px]"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Signing in...

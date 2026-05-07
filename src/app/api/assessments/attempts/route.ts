@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { AUTH_COOKIE_NAME } from "@/constants/auth";
+import { ACCESS_TOKEN_COOKIE_NAME } from "@/constants/auth";
 import { getSessionUser } from "@/features/auth/services/auth-service";
+import { assertSameOriginRequest } from "@/features/auth/services/request-security-service";
 import { getAchievementUnlocks, getLevelFromXp, scoreAssessmentAttempt } from "@/features/assessment/services/assessment-engine";
 import prisma from "@/lib/prisma";
 import { AppError } from "@/lib/errors/app-error";
@@ -80,8 +81,9 @@ function withIntegrityAdjustedXp<T extends { xpEarned: number; integrityFlags: s
 
 export async function POST(request: Request) {
   return routeHandler(async () => {
+    await assertSameOriginRequest(request);
     const cookieStore = await cookies();
-    const user = await getSessionUser(cookieStore.get(AUTH_COOKIE_NAME)?.value);
+    const user = await getSessionUser(cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value);
     const input = attemptSchema.parse(await request.json());
     const scored = scoreAssessmentAttempt(input.kind, input.moduleId, input.answers, {
       durationMs: input.durationMs,

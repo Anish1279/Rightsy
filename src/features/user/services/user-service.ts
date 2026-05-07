@@ -32,7 +32,8 @@ export async function createUser(input: CreateUserInput): Promise<PublicUserDto>
         data: {
           email: input.email,
           name: input.name,
-          password: input.passwordHash,
+          passwordHash: input.passwordHash,
+          passwordChangedAt: new Date(),
         },
         select: publicUserSelect,
       });
@@ -44,4 +45,46 @@ export async function createUser(input: CreateUserInput): Promise<PublicUserDto>
 
     throw error;
   }
+}
+
+export async function resetFailedLoginState(userId: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      failedLoginCount: 0,
+      lockedUntil: null,
+      lastLoginAt: new Date(),
+    },
+  });
+}
+
+export async function recordFailedLogin(userId: string): Promise<void> {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      failedLoginCount: { increment: 1 },
+    },
+    select: { failedLoginCount: true },
+  });
+
+  if (user.failedLoginCount >= 10) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        lockedUntil: new Date(Date.now() + 15 * 60 * 1000),
+      },
+    });
+  }
+}
+
+export async function updateUserPassword(userId: string, passwordHash: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      passwordHash,
+      passwordChangedAt: new Date(),
+      failedLoginCount: 0,
+      lockedUntil: null,
+    },
+  });
 }

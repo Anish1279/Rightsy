@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Rightsy
+
+Rightsy is a Next.js App Router learning platform with a custom JWT authentication system, PostgreSQL persistence through Prisma, rotating refresh sessions, and protected dashboard routes.
 
 ## Getting Started
 
@@ -18,7 +20,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Authentication
+
+The authentication architecture is documented in [docs/auth-architecture.md](docs/auth-architecture.md). Required environment variables are listed in [.env.example](.env.example).
+
+Useful checks:
+
+```bash
+npm run lint
+npm run test:auth
+npm run build
+npm audit --omit=dev
+```
 
 ## Learn More
 

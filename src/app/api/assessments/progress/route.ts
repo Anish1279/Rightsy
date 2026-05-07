@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { AUTH_COOKIE_NAME } from "@/constants/auth";
+import { ACCESS_TOKEN_COOKIE_NAME } from "@/constants/auth";
 import { getSessionUser } from "@/features/auth/services/auth-service";
 import { createEmptyAssessmentProgress } from "@/features/assessment/services/assessment-engine";
 import prisma from "@/lib/prisma";
@@ -19,7 +19,7 @@ function parseJson<T>(value: string | null | undefined, fallback: T): T {
 export async function GET() {
   return routeHandler(async () => {
     const cookieStore = await cookies();
-    const user = await getSessionUser(cookieStore.get(AUTH_COOKIE_NAME)?.value);
+    const user = await getSessionUser(cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value);
 
     const [summary, moduleProgress, achievements, recentAttempts] = await Promise.all([
       prisma.userAssessmentSummary.findUnique({

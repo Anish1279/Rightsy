@@ -1,13 +1,5 @@
-import { Nunito } from "next/font/google";
 import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
-
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-  variable: "--font-nunito",
-});
 
 export const metadata = {
   title: "Rightsy — Learn Your Rights Through Play",
@@ -18,8 +10,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${nunito.variable} dark`}>
-      <body className={nunito.className}>
+    <html lang="en" className="dark">
+      <body>
         <Toaster position="top-center" richColors />
         {children}
       </body>

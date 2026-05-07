@@ -61,6 +61,7 @@ export async function routeHandler(
   try {
     return await handler();
   } catch (error) {
+    console.error("[API_ERROR]", error);
     return jsonError(error);
   }
 }
