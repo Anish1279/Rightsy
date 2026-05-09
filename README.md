@@ -663,21 +663,6 @@ in the Software without restriction...
 
 ---
 
-## 👥 Team
-
-<div align="center">
-
-| <img src="https://github.com/placeholder-ghalib.png" width="80" style="border-radius:50%"/> | <img src="https://github.com/placeholder-anish.png" width="80" style="border-radius:50%"/> | <img src="https://github.com/placeholder-abhishek.png" width="80" style="border-radius:50%"/> |
-|:---:|:---:|:---:|
-| **Ghalib Hussain** | **Anish Singh** | **Abhishek** |
-| Founder & Full Stack Developer | Game Development & Co-Founder | Frontend Developer |
-| [@ghalib](https://github.com/ghalib) | [@anish](https://github.com/anish) | [@abhishek](https://github.com/abhishek) |
-
-| <img src="https://github.com/placeholder-sandeep.png" width="80" style="border-radius:50%"/> | <img src="https://github.com/placeholder-ashish.png" width="80" style="border-radius:50%"/> |
-|:---:|:---:|
-| **Sandeep Verma** | **Ashish Kumar** |
-| Web Designer | Database Administrator |
-| [@sandeep](https://github.com/sandeep) | [@ashish](https://github.com/ashish) |
 
 </div>
 
